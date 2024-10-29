@@ -3,26 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Website Title</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Parking Fee Calculator</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { max-width: 400px; margin: 0 auto; padding: 20px; text-align: center; }
+        input, button { margin: 10px 0; padding: 10px; width: 100%; }
+    </style>
 </head>
 <body>
-    <header>
-        <h1>Welcome to My Simple Website</h1>
-        <nav>
-            <a href="index.html">Home</a>
-            <a href="about.html">About</a>
-            <a href="contact.html">Contact</a>
-        </nav>
-    </header>
-    
-    <main>
-        <h2>About My Website</h2>
-        <p>This is a simple website created with HTML and CSS.</p>
-    </main>
-    
-    <footer>
-        <p>&copy; 2024 Your Name</p>
-    </footer>
+    <div class="container">
+        <h2>Parking Fee Calculator</h2>
+        <label for="entry_time">Entry Time:</label>
+        <input type="datetime-local" id="entry_time" name="entry_time">
+        
+        <label for="exit_time">Exit Time:</label>
+        <input type="datetime-local" id="exit_time" name="exit_time">
+        
+        <button onclick="calculateFee()">Calculate Fee</button>
+        
+        <h3 id="result"></h3>
+    </div>
+
+    <script>
+        async function calculateFee() {
+            const entry_time = document.getElementById('entry_time').value;
+            const exit_time = document.getElementById('exit_time').value;
+            if (!entry_time || !exit_time) {
+                alert('Please select both entry and exit times');
+                return;
+            }
+            const response = await fetch('/calculate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `entry_time=${entry_time}&exit_time=${exit_time}`
+            });
+            const data = await response.json();
+            document.getElementById('result').innerText = `Total Parking Fee: ${data.fee} TWD`;
+        }
+    </script>
 </body>
 </html>
